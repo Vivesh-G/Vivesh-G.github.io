@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
         element.style.borderRight = '0.15em solid #4ade80';
         
         let i = 0;
-        const speed = 10; // typing speed in milliseconds
+        const speed = 1; // typing speed in milliseconds
         
         function typeWriter() {
             if (i < text.length) {
