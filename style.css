@@ -31,7 +31,7 @@
 
 html {
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    /* overflow-x: hidden removed — breaks position:fixed on mobile Safari */
 }
 
 body {
@@ -43,12 +43,15 @@ body {
     background-repeat: no-repeat;
     min-height: 100vh;
     color: var(--text-primary);
+    overflow-x: hidden; /* Mobile Safari needs this on body too */
+    -webkit-text-size-adjust: 100%; /* Prevent iOS text size inflation */
 }
 
 .hero-section {
     position: relative;
     width: 100%;
     min-height: 100vh;
+    min-height: 100svh; /* Small viewport height — excludes mobile browser chrome */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -95,7 +98,8 @@ body {
     position: fixed;
     top: 0;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateZ(0); /* translateZ(0) forces GPU layer — stabilizes fixed on mobile */
+    -webkit-transform: translateX(-50%) translateZ(0);
     background: rgba(0, 0, 0);
     -webkit-backdrop-filter: blur(22px) saturate(1.15);
     backdrop-filter: blur(22px) saturate(1.15);
@@ -1261,43 +1265,119 @@ body {
 
     .notch-nav a .icon {
         display: none;
-        /* Hide icons to save horizontal space on tight screens */
     }
 
-    /* Hero Scaling */
+    /* Hero Scaling — svh excludes mobile browser chrome (address bar) */
+    .hero-section {
+        min-height: 100vh;
+        min-height: 100svh;
+    }
+
     .hero-content {
-        padding-bottom: 12vh;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+        padding-bottom: 6vh;
+        padding-left: 1.2rem;
+        padding-right: 1.2rem;
+    }
+
+    .intro-description {
+        font-size: 1.15rem;
+        line-height: 1.45;
+        margin-bottom: 1rem;
+    }
+
+    .apple-hello {
+        font-size: 1.3em;
+    }
+
+    .massive-title {
+        font-size: clamp(3.2rem, 14vw, 6rem);
+        letter-spacing: -0.04em;
+    }
+
+    /* Hide desktop-only hover doodle overlays (they use position:fixed and follow mouse) */
+    .floating-media.doodle-wrapper {
+        display: none !important;
+    }
+
+    /* Disable letter hover effect since no mouse on touch */
+    .massive-title .letter.hover-trigger:hover {
+        transform: none;
+        color: inherit;
     }
 
     /* Projects Scaling */
     .work-section {
-        padding: 4rem 0;
+        padding: 3rem 0 6rem;
     }
 
-    .work-title-area {
-        margin-bottom: 3rem;
+    .section-title {
+        font-size: 2.4rem;
+    }
+
+    .handwritten-text {
+        font-size: 1.6rem;
+    }
+
+    .work-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .title-with-scribble {
+        margin-bottom: 1.5rem;
+    }
+
+    .arrow-scribble {
+        width: 40px;
     }
 
     .work-grid {
-        gap: 2rem;
-    }
-
-    .project-card {
-        padding: 2rem 2rem 0rem 2rem;
-        border-radius: 24px;
         gap: 1.5rem;
     }
 
-    .project-info p {
-        font-size: 1.1rem;
-        line-height: 1.5;
+    .project-card {
+        padding: 1.8rem 1.8rem 0rem 1.8rem;
+        border-radius: 24px;
+        margin-bottom: 20px;
     }
 
-    .project-arrow {
-        width: 44px;
-        height: 44px;
+    .project-card:nth-child(1) { top: 60px; }
+    .project-card:nth-child(2) { top: 80px; }
+    .project-card:nth-child(3) { top: 100px; }
+    .project-card:nth-child(4) { top: 120px; }
+
+    .card-title-group h3 {
+        font-size: 1.5rem;
+    }
+
+    .card-title-group {
+        gap: 0.8rem;
+    }
+
+    .card-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+    }
+
+    .card-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .btn-arrow svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .project-desc {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.55;
+    }
+
+    .project-single-image {
+        height: 220px;
+        border-radius: 14px 14px 0 0;
     }
 
     .right-visual {
@@ -1306,61 +1386,211 @@ body {
 
     /* Story Section Scaling */
     .me-section {
-        padding: 4rem 0;
+        padding: 3rem 0;
+    }
+
+    .me-headline {
+        font-size: clamp(1.8rem, 5.5vw, 3rem);
+        margin-bottom: 2.5rem;
+        padding: 0 1rem;
+    }
+
+    .me-grid {
+        gap: 1.2rem;
+        margin-bottom: 4rem;
     }
 
     .me-card {
-        padding: 2rem;
+        padding: 1.8rem;
         border-radius: 24px;
     }
 
-    .me-image-card {
-        min-height: 300px;
+    .me-text-card p {
+        font-size: 1.05rem;
+        line-height: 1.55;
+        margin-bottom: 1rem;
     }
 
+    .me-image-card {
+        min-height: 280px;
+    }
+
+    /* Replace non-standard zoom with transform scale — zoom behaves inconsistently on mobile */
     .polaroid {
-        zoom: 0.75;
+        transform-origin: center center;
+        transform: scale(0.65);
+    }
+
+    .polaroid-one {
+        transform: scale(0.65) rotate(-10deg);
+    }
+
+    .polaroid-two {
+        transform: scale(0.65) rotate(6deg);
     }
 
     .branding-popup {
-        font-size: 1.5rem;
-        padding: 0.8rem 1.6rem;
+        font-size: 1.4rem;
+        padding: 0.8rem 1.5rem;
+    }
+
+    /* Collage Canvas */
+    .me-collage-canvas {
+        min-height: 500px;
+        max-width: 100%;
+        padding: 0 1rem;
+        overflow: hidden; /* Prevent collage items from causing horizontal scroll */
+    }
+
+    .collage-text {
+        font-size: clamp(1.8rem, 5vw, 2.8rem);
     }
 
     .collage-item {
-        zoom: 0.6;
-        /* Shrink floating images so they don't break viewport edge margins */
+        transform-origin: center center;
     }
 
-    /* Connect Action Block */
+    .collage-item-a { transform: scale(0.45) rotate(-8deg); }
+    .collage-item-b { transform: scale(0.45) rotate(12deg); }
+    .collage-item-c { transform: scale(0.45) rotate(-5deg); }
+    .collage-item-d { transform: scale(0.45) rotate(5deg); }
+    .collage-item-e { transform: scale(0.5) rotate(15deg); }
+
+    /* Connect Section */
+    .connect-section {
+        min-height: 80vh;
+        min-height: 80svh;
+    }
+
     .connect-text-top {
-        top: -60px;
+        top: -50px;
     }
 
     .connect-text-top .handwritten-text {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 
     .massive-connect-btn {
+        font-size: clamp(2.8rem, 9vw, 5rem);
         padding: 1rem 3rem;
-        transform: rotate(-10deg);
-        /* Reduce severe angle on mobile so text fits dynamically */
+        transform: rotate(-8deg);
+        border-radius: 100px;
     }
 
     .massive-connect-btn:hover {
-        transform: rotate(-10deg) scale(1.05) translateY(-5px);
+        transform: rotate(-8deg) scale(1.05) translateY(-5px);
+    }
+
+    .blue-glow {
+        width: 350px;
+        height: 280px;
     }
 
     .impact-doodle {
         display: none;
-        /* Hide doodles to prevent horizontal viewport stretching */
     }
 
     /* Footer Restructure */
     .footer-bar {
         flex-direction: column;
-        gap: 1.5rem;
-        padding: 1.5rem;
+        gap: 1.2rem;
+        padding: 1.3rem;
         border-radius: 18px;
+    }
+
+    .footer-email {
+        font-size: 1.05rem;
+    }
+
+    .social-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+    }
+}
+
+/* --- Extra Small Devices (phones under 480px) --- */
+@media (max-width: 480px) {
+    .hero-content {
+        padding-bottom: 4vh;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .intro-description {
+        font-size: 1.05rem;
+    }
+
+    .massive-title {
+        font-size: clamp(2.8rem, 13vw, 4.5rem);
+    }
+
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .project-card {
+        padding: 1.5rem 1.5rem 0rem 1.5rem;
+        border-radius: 20px;
+    }
+
+    .card-title-group h3 {
+        font-size: 1.3rem;
+    }
+
+    .project-desc {
+        font-size: 0.9rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .project-single-image {
+        height: 180px;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .me-headline {
+        font-size: clamp(1.5rem, 5vw, 2.2rem);
+        margin-bottom: 2rem;
+    }
+
+    .me-card {
+        padding: 1.4rem;
+        border-radius: 20px;
+    }
+
+    .me-text-card p {
+        font-size: 0.95rem;
+    }
+
+    .collage-text {
+        font-size: clamp(1.5rem, 4.5vw, 2.2rem);
+    }
+
+    .collage-item-a { transform: scale(0.35) rotate(-8deg); }
+    .collage-item-b { transform: scale(0.35) rotate(12deg); }
+    .collage-item-c { transform: scale(0.35) rotate(-5deg); }
+    .collage-item-d { transform: scale(0.35) rotate(5deg); }
+    .collage-item-e { transform: scale(0.4) rotate(15deg); }
+
+    .me-collage-canvas {
+        min-height: 400px;
+    }
+
+    .massive-connect-btn {
+        font-size: clamp(2.2rem, 8vw, 3.5rem);
+        padding: 0.8rem 2rem;
+    }
+
+    .connect-text-top .handwritten-text {
+        font-size: 1.1rem;
+    }
+
+    .footer-email {
+        font-size: 0.95rem;
+    }
+
+    .social-icon {
+        width: 40px;
+        height: 40px;
     }
 }

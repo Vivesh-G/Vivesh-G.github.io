@@ -1,4 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Detect touch-only devices — skip desktop-only hover doodle system entirely
+    const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+
     // Map data-hover attributes to corresponding image containers
     const floatingElements = {
         'float-V1': document.getElementById('float-V1'),
@@ -21,47 +24,50 @@ document.addEventListener('DOMContentLoaded', () => {
     let activeId = null;
     let isTracking = false;
 
-    // Constantly update mouse coordinates
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-    });
-
-    // Mouse tracking logic merged into main renderLoop for performance
-
-    // Attach event listeners to specific letters in the typography
-    triggers.forEach(trigger => {
-        trigger.addEventListener('mouseenter', (e) => {
-            const targetId = trigger.getAttribute('data-hover');
-
-            // Instantly snap position on first hover so it doesn't fly in from afar
-            if (!isTracking) {
-                currentX = mouseX;
-                currentY = mouseY;
-            }
-
-            if (floatingElements[targetId]) {
-                activeId = targetId;
-                isTracking = true;
-                floatingElements[targetId].classList.add('visible');
-            }
+    // Only attach mouse-driven doodle tracking on non-touch (desktop) devices
+    if (!isTouchDevice) {
+        // Constantly update mouse coordinates
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
         });
 
-        trigger.addEventListener('mouseleave', (e) => {
-            const targetId = trigger.getAttribute('data-hover');
-            if (floatingElements[targetId]) {
-                floatingElements[targetId].classList.remove('visible');
+        // Mouse tracking logic merged into main renderLoop for performance
 
-                // Slight delay before releasing tracking so the exit transition is smooth
-                setTimeout(() => {
-                    if (!document.querySelector('.hover-trigger:hover')) {
-                        activeId = null;
-                        isTracking = false;
-                    }
-                }, 300);
-            }
+        // Attach event listeners to specific letters in the typography
+        triggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', (e) => {
+                const targetId = trigger.getAttribute('data-hover');
+
+                // Instantly snap position on first hover so it doesn't fly in from afar
+                if (!isTracking) {
+                    currentX = mouseX;
+                    currentY = mouseY;
+                }
+
+                if (floatingElements[targetId]) {
+                    activeId = targetId;
+                    isTracking = true;
+                    floatingElements[targetId].classList.add('visible');
+                }
+            });
+
+            trigger.addEventListener('mouseleave', (e) => {
+                const targetId = trigger.getAttribute('data-hover');
+                if (floatingElements[targetId]) {
+                    floatingElements[targetId].classList.remove('visible');
+
+                    // Slight delay before releasing tracking so the exit transition is smooth
+                    setTimeout(() => {
+                        if (!document.querySelector('.hover-trigger:hover')) {
+                            activeId = null;
+                            isTracking = false;
+                        }
+                    }, 300);
+                }
+            });
         });
-    });
+    }
 
     // SVG Scribble Scroll Animation Observer
     const animatableElements = document.querySelectorAll('.scribble, .me-card');
