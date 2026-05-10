@@ -138,7 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Build Parallax map (only collage items, project cards use CSS sticky stacking)
         parallaxTargetElements = Array.from(document.querySelectorAll('.collage-item')).map(card => {
             // Strip any live transforms safely before measuring native constraints
-            card.style.transform = 'none';
+            card.style.setProperty('--parallax-y', '0px');
+            card.style.setProperty('--parallax-scale', '1');
             return {
                 el: card,
                 top: card.getBoundingClientRect().top + window.scrollY,
@@ -282,7 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Apply a slight elastic dimensional scaling bound to the scroll depth progress
                 const scale = Math.max(0.92, Math.min(1, 0.92 + (opacity * 0.08)));
 
-                data.el.style.transform = `translateY(${offset}px) scale(${scale})`;
+                data.el.style.setProperty('--parallax-y', `${offset}px`);
+                data.el.style.setProperty('--parallax-scale', scale);
                 data.el.style.opacity = opacity;
             });
 

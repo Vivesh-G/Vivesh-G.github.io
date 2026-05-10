@@ -31,7 +31,12 @@
 
 html {
     scroll-behavior: smooth;
+    box-sizing: border-box;
     /* overflow-x: hidden removed — breaks position:fixed on mobile Safari */
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
 }
 
 body {
@@ -59,6 +64,7 @@ body {
     isolation: isolate;
     z-index: 10;
     background: transparent;
+    overflow-x: hidden;
 }
 
 .hero-section::before {
@@ -877,13 +883,18 @@ body {
 .collage-item {
     position: absolute;
     box-shadow: 0 25px 60px rgba(40, 58, 97, 0.14);
+    --base-scale: 1;
+    --base-rotate: 0deg;
+    --parallax-y: 0px;
+    --parallax-scale: 1;
+    transform: translateY(var(--parallax-y)) scale(calc(var(--base-scale) * var(--parallax-scale))) rotate(var(--base-rotate));
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 1;
     /* Sit behind text naturally */
 }
 
 .collage-item:hover {
-    transform: scale(1.08) translateZ(0) !important;
+    transform: translateY(var(--parallax-y)) scale(calc(var(--base-scale) * 1.08)) rotate(var(--base-rotate)) translateZ(0) !important;
     /* Overrides inline scales */
     z-index: 15 !important;
 }
@@ -916,33 +927,34 @@ body {
 }
 
 .collage-item-a {
+    --base-rotate: -8deg;
     top: 10%;
     left: 0%;
-    transform: rotate(-8deg);
 }
 
 .collage-item-b {
+    --base-rotate: 12deg;
     top: -5%;
     right: 5%;
-    transform: rotate(12deg);
 }
 
 .collage-item-c {
+    --base-rotate: -5deg;
     bottom: 10%;
     left: 5%;
-    transform: rotate(-5deg);
 }
 
 .collage-item-d {
+    --base-rotate: 5deg;
     bottom: 5%;
     right: 15%;
-    transform: rotate(5deg);
 }
 
 .collage-item-e {
+    --base-rotate: 15deg;
+    --base-scale: 1.1;
     top: 50%;
     left: 30%;
-    transform: scale(1.1) rotate(15deg);
 }
 
 .collage-card {
@@ -1307,7 +1319,7 @@ body {
 
     /* Projects Scaling */
     .work-section {
-        padding: 3rem 0 6rem;
+        padding: 5rem 0 7rem;
     }
 
     .section-title {
@@ -1331,7 +1343,7 @@ body {
     }
 
     .work-grid {
-        gap: 1.5rem;
+        gap: 2.5rem;
     }
 
     .project-card {
@@ -1386,18 +1398,18 @@ body {
 
     /* Story Section Scaling */
     .me-section {
-        padding: 3rem 0;
+        padding: 5rem 0;
     }
 
     .me-headline {
         font-size: clamp(1.8rem, 5.5vw, 3rem);
-        margin-bottom: 2.5rem;
+        margin-bottom: 3.5rem;
         padding: 0 1rem;
     }
 
     .me-grid {
-        gap: 1.2rem;
-        margin-bottom: 4rem;
+        gap: 2rem;
+        margin-bottom: 5rem;
     }
 
     .me-card {
@@ -1436,25 +1448,33 @@ body {
 
     /* Collage Canvas */
     .me-collage-canvas {
-        min-height: 500px;
+        min-height: 600px;
         max-width: 100%;
-        padding: 0 1rem;
+        padding: 2rem 1rem;
         overflow: hidden; /* Prevent collage items from causing horizontal scroll */
     }
 
     .collage-text {
         font-size: clamp(1.8rem, 5vw, 2.8rem);
+        line-height: 1.35;
     }
 
     .collage-item {
         transform-origin: center center;
     }
 
-    .collage-item-a { transform: scale(0.45) rotate(-8deg); }
-    .collage-item-b { transform: scale(0.45) rotate(12deg); }
-    .collage-item-c { transform: scale(0.45) rotate(-5deg); }
-    .collage-item-d { transform: scale(0.45) rotate(5deg); }
-    .collage-item-e { transform: scale(0.5) rotate(15deg); }
+    .collage-item-a { top: 2%; left: -20%; }
+    .collage-item-b { top: 0%; right: -20%; }
+    .collage-item-c { bottom: 5%; left: -20%; }
+    .collage-item-d { bottom: 2%; right: -15%; }
+    .collage-item-e { top: 78%; left: 25%; }
+
+    .collage-item-a, .collage-item-b, .collage-item-c, .collage-item-d {
+        --base-scale: 0.45;
+    }
+    .collage-item-e {
+        --base-scale: 0.5;
+    }
 
     /* Connect Section */
     .connect-section {
@@ -1566,14 +1586,15 @@ body {
         font-size: clamp(1.5rem, 4.5vw, 2.2rem);
     }
 
-    .collage-item-a { transform: scale(0.35) rotate(-8deg); }
-    .collage-item-b { transform: scale(0.35) rotate(12deg); }
-    .collage-item-c { transform: scale(0.35) rotate(-5deg); }
-    .collage-item-d { transform: scale(0.35) rotate(5deg); }
-    .collage-item-e { transform: scale(0.4) rotate(15deg); }
+    .collage-item-a, .collage-item-b, .collage-item-c, .collage-item-d {
+        --base-scale: 0.35;
+    }
+    .collage-item-e {
+        --base-scale: 0.4;
+    }
 
     .me-collage-canvas {
-        min-height: 400px;
+        min-height: 500px;
     }
 
     .massive-connect-btn {
